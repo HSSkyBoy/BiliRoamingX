@@ -1,0 +1,55 @@
+name: CI Build
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - '.github/**'
+      - '!.github/workflows/*'
+      - '.idea/**'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Retrieve version
+        run: |
+          version=$(grep 'version' gradle.properties | cut -d'=' -f2)
+          commit_count=$(git rev-list HEAD --count)
+          echo "VERSION=${version}.r${commit_count}" >> $GITHUB_ENV
+
+      - name: Build with Gradle
+        run: ./gradlew --no-daemon --parallel -Dorg.gradle.jvmargs=-Xmx2g -Pversion=$VERSION dist
+
+      - name: Upload artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BiliRoamingX-${{ env.VERSION }}
+          path: 'build'
