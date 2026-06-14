@@ -3,7 +3,7 @@
 # BiliRoamingN
 
 [![CI](https://github.com/HSSkyBoy/BiliRoamingX/workflows/CI/badge.svg)](https://github.com/HSSkyBoy/BiliRoamingX/actions)
-[![Channel](https://img.shields.io/badge/Follow-Telegram-blue?logo=telegram)](https://t.me/Aniruf_x)
+[![Channel](https://img.shields.io/badge/Follow-Telegram-blue?logo=telegram)](https://t.me/bbx_show)
 [![Download](https://img.shields.io/github/downloads/BiliRoamingX/BiliRoamingX-PreBuilds/total?color=critical&label=Download&logo=data:image/png)](https://github.com/BiliRoamingX/BiliRoamingX/releases/latest)
 [![Star](https://img.shields.io/github/stars/HSSkyBoy/BiliRoamingX?label=Star&color=important&logo=data:image/png)](https://github.com/HSSkyBoy/BiliRoamingX)
 
