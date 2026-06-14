@@ -186,13 +186,7 @@ object Accounts {
         cachePrefs.edit { putLong(key, current) }
         val api = StringDecoder.decode("82kPqomaPXmNG1KYpemYwCxgGaViTMfWQ7oNyBh48mRC").toString(Charsets.UTF_8)
         require(api.startsWith(StringDecoder.decode("JULvAwoUgmc").toString(Charsets.UTF_8)))
-        val info = HttpClient.getBlacklist("$api/$mid")?.data<BlacklistInfo>() ?: run {
-            Logger.debug { "Blacklist is null !" }
-            Toasts.showLong("黑名单检查失败，即将退出哔哩哔哩")
-            Utils.exit()
-            return@runCatching
-        }
-        Logger.debug { "Blacklist: $info ." }
+        val info = HttpClient.get("$api/$mid")?.data<BlacklistInfo>() ?: return@runCatching
         val blockedKey = "user_blocked_$mid"
         if (info.isBlacklist && info.banUntil.time > current) Utils.runOnMainThread {
             cachePrefs.edit { putBoolean(blockedKey, true) }
@@ -222,7 +216,7 @@ object Accounts {
                 if (topActivity != null && !dialogShowing) {
                     AlertDialog.Builder(topActivity)
                         .setTitle(Utils.getString("biliroaming_unblocked_title"))
-                        .setMessage(Utils.getString("biliroaming_archived_description"))
+                        .setMessage(Utils.getString("biliroaming_unblocked_description"))
                         .setPositiveButton(Utils.getString("biliroaming_reboot_now")) { _, _ ->
                             Utils.reboot()
                         }.create().constraintSize().apply {
