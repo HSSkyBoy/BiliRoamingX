@@ -1,4 +1,4 @@
-name: CI Build
+name: CI
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
       - '**.md'
       - '.github/**'
       - '!.github/workflows/*'
-      - '.idea/**'
 
 jobs:
   build:
@@ -28,28 +27,31 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Cache Gradle dependencies
+      - name: Cache gradle
         uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/*.versions.toml') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
       - name: Retrieve version
         run: |
-          version=$(grep 'version' gradle.properties | cut -d'=' -f2)
-          commit_count=$(git rev-list HEAD --count)
-          echo "VERSION=${version}.r${commit_count}" >> $GITHUB_ENV
+          version=`awk -F "=" '$1 == "version" {print $2}' gradle.properties`
+          commit_count=`git rev-list HEAD --count`
+          version="${version}.r${commit_count}"
+          echo "VERSION=$version" >> $GITHUB_ENV
 
-      - name: Build with Gradle
-        run: ./gradlew --no-daemon --parallel -Dorg.gradle.jvmargs=-Xmx2g -Pversion=$VERSION dist
+      - name: Build with gradle
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: ./gradlew --no-daemon -Dorg.gradle.jvmargs=-Xmx2g -Pversion=$VERSION dist
 
       - name: Upload artifacts
-        if: success()
         uses: actions/upload-artifact@v4
+        if: success()
         with:
-          name: BiliRoamingX-${{ env.VERSION }}
+          name: BiliRoamingN-${{ env.VERSION }}
           path: 'build'

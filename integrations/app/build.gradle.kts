@@ -42,7 +42,7 @@ setupAppModule {
                 )
                 cFlags("-std=c18", *flags)
                 cppFlags("-std=c++20", *flags)
-                targets("biliroamingx")
+                targets("biliroamingn")
             }
         }
     }

@@ -9,8 +9,8 @@ import app.revanced.patches.shared.misc.mapping.ResourceMappingPatch
 import app.revanced.util.*
 
 @Patch(
-    name = "BiliRoamingX settings entrance",
-    description = "哔哩漫游X设置入口",
+    name = "BiliRoamingN settings entrance",
+    description = "哔哩漫游N设置入口",
     compatiblePackages = [
         CompatiblePackage(name = "tv.danmaku.bili"),
         CompatiblePackage(name = "tv.danmaku.bilibilihd"),
@@ -27,6 +27,7 @@ object SettingsResourcePatch : ResourcePatch() {
     val isHd get() = packageName == "tv.danmaku.bilibilihd"
 
     private val xmls = arrayOf(
+        "biliroaming_setting_sponsor.xml",
         "biliroaming_locales_config.xml",
         "biliroaming_search_result.xml",
         "biliroaming_settings.xml",

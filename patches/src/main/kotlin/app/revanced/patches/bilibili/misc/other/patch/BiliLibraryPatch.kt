@@ -23,7 +23,7 @@ object BiliLibraryPatch : RawResourcePatch() {
         listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64").forEach { arch ->
             val soDir = context["lib/$arch/libc++_shared.so", true].takeIf { it.isFile }?.parentFile
             if (soDir != null) {
-                val soName = "libbiliroamingx.so"
+                val soName = "libbiliroamingn.so"
                 File(soDir, soName).outputStream().use { output ->
                     bundledResource("bilibili/lib/$arch/$soName").use { input ->
                         input.copyTo(output)

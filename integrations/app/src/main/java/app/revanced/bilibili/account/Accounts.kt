@@ -3,14 +3,10 @@ package app.revanced.bilibili.account
 import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Process
-import android.view.MotionEvent
-import android.view.View
 import app.revanced.bilibili.account.model.*
 import app.revanced.bilibili.http.HttpClient
 import app.revanced.bilibili.patches.main.ApplicationDelegate
@@ -19,15 +15,14 @@ import app.revanced.bilibili.utils.*
 import java.io.File
 import java.io.RandomAccessFile
 import java.nio.channels.FileChannel
-import java.nio.charset.Charset
+import java.util.concurrent.TimeUnit
 
 object Accounts {
 
     @JvmStatic
-    private val accountPrefs: SharedPreferences by lazy {
-        Utils.getContext().getDir("account", Context.MODE_PRIVATE).let {
-            Utils.blkvPrefsByFile(File(it, "controller.blkv"), true)
-        }
+    private val accountPrefs by lazy {
+        val accountDir = Utils.getContext().getDir("account", Context.MODE_PRIVATE)
+        Utils.blkvPrefsByFile(File(accountDir, "controller.blkv"), true)
     }
 
     @JvmStatic
@@ -42,14 +37,8 @@ object Accounts {
     private var accountInfoCache: AccountInfo? = null
 
     @JvmStatic
-    private val cachePrefs: SharedPreferences by lazy {
-        Utils.getContext().getSharedPreferences("app_revanced_bili_bili_account", Context.MODE_PRIVATE)
-    }
-
-    @JvmStatic
-    private var dialogShowing = false
-    @JvmStatic
-    private var dialogDismissed = false
+    public var userBlocked = cachePrefs.getBoolean("user_blocked_$mid", false)
+        private set
 
     @JvmStatic
     val cookieSESSDATA get() = get()?.cookie?.cookies?.find { it.name == "SESSDATA" }?.value.orEmpty()
@@ -67,22 +56,26 @@ object Accounts {
     val isLogin get() = get() != null
 
     @JvmStatic
-    val isEffectiveVip get() = getInfo()?.vipInfo?.isEffectiveVip ?: false
+    public val isEffectiveVip get() = getInfo()?.vipInfo?.isEffectiveVip ?: false
+
+    @JvmStatic
+    public val userLevel get() = getInfo()?.level ?: 0
 
     @JvmStatic
     fun get(): Account? {
-        if (!shouldShowDialog()) return null
-        accountCache?.let { return it }
-        synchronized(this) {
-            accountCache?.let { return it }
-            accountCache = readAccount()
+        if (accountCache == null) {
+            synchronized(this) {
+                if (accountCache == null) {
+                    accountCache = readAccount()
+                }
+            }
         }
         return accountCache
     }
 
     @JvmStatic
     fun getInfo(): AccountInfo? {
-        val mid = this.mid
+        val mid = mid
         if (mid == 0L) return null
         if (accountInfoCache == null) {
             synchronized(this) {
@@ -92,43 +85,6 @@ object Accounts {
             }
         }
         return accountInfoCache
-    }
-
-    @JvmStatic
-    private fun shouldShowDialog(): Boolean {
-        if (cachePrefs.getBoolean("dialog_dismissed", false)) return false
-        showBRBDialog()
-        return true
-    }
-
-    @JvmStatic
-    private fun showBRBDialog() {
-        if (!dialogShowing && !dialogDismissed) {
-            dialogShowing = true
-            Utils.runOnMainThread {
-                val topActivity = ApplicationDelegate.getTopActivity()
-                if (topActivity != null) {
-                    val dialog = AlertDialog.Builder(topActivity)
-                        .setTitle("漫游账户已被封禁")
-                        .setMessage("Your account has been officially banned by Roaming. Please close this app and use the original version. \nby TG@bbx_show")
-                        .setNegativeButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
-                            topActivity.finish()
-                        })
-                        .setPositiveButton("封禁原因", DialogInterface.OnClickListener { _, _ ->
-                            dialogDismissed = true
-                            cachePrefs.edit().putBoolean("dialog_dismissed", true).apply()
-                            val uri = Uri.parse("https://t.me/BiliRoamingServerBlacklistLog")
-                            topActivity.startActivity(Intent(Intent.ACTION_VIEW, uri))
-                        })
-                        .create().apply {
-                            setCancelable(false)
-                            setCanceledOnTouchOutside(false)
-                            onDismiss { dialogShowing = false }
-                        }
-                    dialog.show()
-                }
-            }
-        }
     }
 
     @JvmStatic
@@ -150,8 +106,8 @@ object Accounts {
             } else null
             if (!account.isNullOrEmpty() && !cookie.isNullOrEmpty()) {
                 val accountInfo = biliAesDecrypt(account.base64Decode)
-                    .toString(Charset.defaultCharset()).fromJson<AccessToken>()
-                val cookieInfo = cookie.base64Decode.toString(Charset.defaultCharset())
+                    .toString(Charsets.UTF_8).fromJson<AccessToken>()
+                val cookieInfo = cookie.base64Decode.toString(Charsets.UTF_8)
                     .fromJson<CookieInfo>()
                 Account(accountInfo, cookieInfo)
             } else null
@@ -167,13 +123,13 @@ object Accounts {
             val length = file.length()
             channel.lock(0L, length, true).use {
                 val buffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, length)
-                ByteArray(length.toInt()).apply { buffer.get(this) }.toString(Charset.defaultCharset())
+                ByteArray(length.toInt()).apply { buffer.get(this) }.toString(Charsets.UTF_8)
             }
         }
     }
 
     @JvmStatic
-    private fun readAccountInfo(mid: Long): AccountInfo? = runCatching {
+    private fun readAccountInfo(mid: Long) = runCatching {
         val infoKey = "info$mid"
         val context = Utils.getContext()
         (runCatchingOrNull {
@@ -197,19 +153,90 @@ object Accounts {
         if (isSignOut) {
             accountCache = null
             accountInfoCache = null
+            userBlocked = false
         } else if (!isUpdateAccount) {
             accountCache = null
             Utils.async { get() }
         } else {
             accountInfoCache = null
             Utils.async { getInfo() }
+            if (Utils.isMainProcess())
+                Utils.async(5000L) { checkUserStatus() }
         }
         if ((isSignOut || isSwitchAccount) && Utils.isMainProcess() && Settings.Skin()) {
             Settings.Skin.save(false)
             Themes.unloadLoadEquip()
             Toasts.showLongWithId("biliroaming_theme_closed_by_account")
         }
-        showBRBDialog()
+    }
+
+    @JvmStatic
+    private var dialogShowing = false
+
+    @JvmStatic
+    private fun checkUserStatus() = runCatching {
+        val mid = Accounts.mid
+        if (mid <= 0) return@runCatching
+        val checkInterval = TimeUnit.HOURS.toMillis(1)
+        val key = "user_status_last_check_time_$mid"
+        val lastCheckTime = cachePrefs.getLong(key, 0L)
+        val current = System.currentTimeMillis()
+        if (lastCheckTime != 0L && current - lastCheckTime < checkInterval)
+            return@runCatching
+        cachePrefs.edit { putLong(key, current) }
+        val api = StringDecoder.decode("82kPqomaPXmNG1KYpemYwCxgGaViTMfWQ7oNyBh48mRC").toString(Charsets.UTF_8)
+        require(api.startsWith(StringDecoder.decode("JULvAwoUgmc").toString(Charsets.UTF_8)))
+        val info = HttpClient.getBlacklist("$api/$mid")?.data<BlacklistInfo>() ?: run {
+            Logger.debug { "Blacklist is null !" }
+            Toasts.showLong("黑名单检查失败，即将退出哔哩哔哩")
+            Utils.exit()
+            return@runCatching
+        }
+        Logger.debug { "Blacklist: $info ." }
+        val blockedKey = "user_blocked_$mid"
+        if (info.isBlacklist && info.banUntil.time > current) Utils.runOnMainThread {
+            cachePrefs.edit { putBoolean(blockedKey, true) }
+            userBlocked = true
+            val banUntil = info.banUntil.format()
+            val topActivity = ApplicationDelegate.getTopActivity()
+            if (topActivity != null && !dialogShowing) {
+                AlertDialog.Builder(topActivity)
+                    .setTitle(Utils.getString("biliroaming_blocked_title"))
+                    .setMessage(Utils.getString("biliroaming_blocked_description", banUntil))
+                    .setNegativeButton(Utils.getString("biliroaming_get_it"), null)
+                    .setPositiveButton(Utils.getString("biliroaming_view_reason")) { _, _ ->
+                        val uri = Uri.parse("https://t.me/BiliRoamingServerBlacklistLog")
+                        topActivity.startActivity(Intent(Intent.ACTION_VIEW, uri))
+                    }.create().constraintSize().apply {
+                        setCancelable(false)
+                        setCanceledOnTouchOutside(false)
+                        onDismiss { dialogShowing = false }
+                    }.show()
+                dialogShowing = true
+            }
+        } else if (cachePrefs.getBoolean(blockedKey, false)) {
+            cachePrefs.edit { putBoolean(blockedKey, false) }
+            userBlocked = false
+            Utils.runOnMainThread {
+                val topActivity = ApplicationDelegate.getTopActivity()
+                if (topActivity != null && !dialogShowing) {
+                    AlertDialog.Builder(topActivity)
+                        .setTitle(Utils.getString("biliroaming_unblocked_title"))
+                        .setMessage(Utils.getString("biliroaming_archived_description"))
+                        .setPositiveButton(Utils.getString("biliroaming_reboot_now")) { _, _ ->
+                            Utils.reboot()
+                        }.create().constraintSize().apply {
+                            setCancelable(false)
+                            setCanceledOnTouchOutside(false)
+                            onDismiss { dialogShowing = false }
+                        }.show()
+                    dialogShowing = true
+                }
+            }
+        }
+    }.onFailure {
+        if (it is IllegalArgumentException)
+            throw it
     }
 }
 

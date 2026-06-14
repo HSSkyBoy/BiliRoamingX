@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22.1)
-project(biliroamingx)
+project(biliroamingn)
 
 enable_language(CXX C)
 set(CMAKE_CXX_STANDARD 20)
@@ -16,7 +16,7 @@ SET_OPTION(DOBBY_GENERATE_SHARED OFF)
 SET_OPTION(Plugin.SymbolResolver OFF)
 add_subdirectory(${LIBS_DIR}/Dobby dobby)
 
-add_library(${PROJECT_NAME} SHARED biliroamingx.cc)
+add_library(${PROJECT_NAME} SHARED biliroamingn.cc)
 find_library(log-lib log)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC dobby ${log-lib})

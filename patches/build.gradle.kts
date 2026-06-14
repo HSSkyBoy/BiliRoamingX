@@ -23,8 +23,8 @@ tasks.jar {
     exclude("app/revanced/generator")
 
     manifest {
-        attributes["Name"] = "BiliRoamingX Patches"
-        attributes["Description"] = "Patches for BiliRoamingX."
+        attributes["Name"] = "BiliRoamingN Patches"
+        attributes["Description"] = "Patches for BiliRoamingN."
         attributes["Version"] = version
         attributes["Timestamp"] = System.currentTimeMillis().toString()
         attributes["Source"] = "git@github.com:BiliRoamingX/BiliRoamingX.git"
@@ -102,8 +102,8 @@ publishing {
             from(components["java"])
 
             pom {
-                name = "BiliRoamingX Patches"
-                description = "Patches for BiliRoamingX."
+                name = "BiliRoamingN Patches"
+                description = "Patches for BiliRoamingN."
 
                 licenses {
                     license {

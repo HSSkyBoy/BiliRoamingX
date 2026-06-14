@@ -91,7 +91,7 @@ object Upgrade : ApiHook() {
                 val appVersionChange =
                     if (sameApp) "" else "APP版本：$versionName($versionCode) --> ${info.version}(${info.versionCode})"
                 val patchVersionChange =
-                    if (samePatch) "" else "漫游X版本：$patchVersion --> ${info.patchVersion}"
+                    if (samePatch) "" else "漫游N版本：$patchVersion --> ${info.patchVersion}"
                 val changeSum = arrayOf(appVersionChange, patchVersionChange)
                     .filterNot { it.isEmpty() }.joinToString(separator = "\n")
                 if (changeSum.isNotEmpty()) {
@@ -103,7 +103,7 @@ object Upgrade : ApiHook() {
                     "message" to "0",
                     "ttl" to 1,
                     "data" to mapOf(
-                        "title" to "新版漫游X集成包",
+                        "title" to "新版漫游N集成包",
                         "content" to newChangelog.toString(),
                         "version" to info.version,
                         "version_code" to if (sameApp) info.versionCode + 1 else info.versionCode,
@@ -121,7 +121,7 @@ object Upgrade : ApiHook() {
                     Logger.debug { "Upgrade check result: $it" }
                 }
             } else {
-                return mapOf("code" to -1, "message" to "未发现新版漫游X集成包！").toJSONObject()
+                return mapOf("code" to -1, "message" to "未发现新版漫游N集成包！").toJSONObject()
             }
         }
         return null

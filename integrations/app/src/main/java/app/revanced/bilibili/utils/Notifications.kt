@@ -16,7 +16,7 @@ sealed class NcChannel(
     val importance: Int = NotificationManager.IMPORTANCE_DEFAULT,
     val mute: Boolean = true,
 ) {
-    object BiliRoamingX : NcChannel("biliroamingx", "哔哩漫游X")
+    object BiliRoamingN : NcChannel("biliroamingn", "哔哩漫游N")
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun toNative(): NotificationChannel {
@@ -36,7 +36,7 @@ sealed class NcChannel(
 @Suppress("DEPRECATION")
 fun NotificationManager.buildNotification(
     context: Context,
-    channel: NcChannel = NcChannel.BiliRoamingX
+    channel: NcChannel = NcChannel.BiliRoamingN
 ) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
     val native = channel.toNative()
     if (notificationChannels.none { it.id == native.id })

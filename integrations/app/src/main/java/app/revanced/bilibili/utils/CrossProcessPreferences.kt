@@ -84,7 +84,7 @@ class CrossProcessPreferences(private val name: String) : SharedPreferences {
 
     private class PreferenceUpdater : BroadcastReceiver() {
         companion object {
-            private const val ACTION = "biliroamingx.action.preferences.update"
+            private const val ACTION = "biliroamingn.action.preferences.update"
 
             fun register() {
                 context.registerReceiverCompat(PreferenceUpdater(), IntentFilter(ACTION))
@@ -142,7 +142,7 @@ class CrossProcessPreferences(private val name: String) : SharedPreferences {
 
     private class PreferenceSyncer : BroadcastReceiver() {
         companion object {
-            private const val ACTION = "biliroamingx.action.preferences.sync"
+            private const val ACTION = "biliroamingn.action.preferences.sync"
 
             fun register() {
                 context.registerReceiverCompat(PreferenceSyncer(), IntentFilter(ACTION))

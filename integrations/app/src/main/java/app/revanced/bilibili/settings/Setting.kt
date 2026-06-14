@@ -44,7 +44,7 @@ sealed class Setting<out T : Any>(
     }
 
     fun get(): T {
-        return if (dependency != null && !dependency.get()) defValue else value
+        return if (Accounts.userBlocked || (dependency != null && !dependency.get())) defValue else value
     }
 
     fun executeOnChangeAction(async: Boolean) {
