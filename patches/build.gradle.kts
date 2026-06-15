@@ -54,7 +54,8 @@ tasks.register("buildDexJar") {
 
         exec {
             workingDir = workingDirectory
-            commandLine = listOf(d8, "--release", patchesJar)
+            val classpath = configurations.runtimeClasspath.get().files.flatMap { listOf("--classpath", it.absolutePath) }
+            commandLine = listOf(d8, "--release") + classpath + patchesJar
         }
 
         ZFile.openReadWrite(File(patchesJar)).use {

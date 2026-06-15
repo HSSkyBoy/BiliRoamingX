@@ -22,6 +22,10 @@ setupAppModule {
             m.toInt() * 1000000 + s.toInt() * 1000 + f.filter { it.isDigit() }.toInt()
         }
 
+        ndk {
+            abiFilters("arm64-v8a", "x86_64")
+        }
+
         externalNativeBuild {
             cmake {
                 val flags = arrayOf(
