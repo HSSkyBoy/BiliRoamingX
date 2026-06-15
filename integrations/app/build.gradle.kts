@@ -19,7 +19,7 @@ setupAppModule {
         val verName = version as String
         versionName = verName
         versionCode = verName.split('.').let { (m, s, f) ->
-            m.toInt() * 1000000 + s.toInt() * 1000 + f.toInt()
+            m.toInt() * 1000000 + s.toInt() * 1000 + f.filter { it.isDigit() }.toInt()
         }
 
         externalNativeBuild {
