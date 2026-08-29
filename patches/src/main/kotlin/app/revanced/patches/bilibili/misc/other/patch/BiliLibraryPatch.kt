@@ -12,9 +12,7 @@ import java.io.File
     name = "Bili library patch",
     description = "so库修补（目前绕过了签名校验）",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ],
     dependencies = [SettingsResourcePatch::class]
 )
@@ -23,7 +21,7 @@ object BiliLibraryPatch : RawResourcePatch() {
         listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64").forEach { arch ->
             val soDir = context["lib/$arch/libc++_shared.so", true].takeIf { it.isFile }?.parentFile
             if (soDir != null) {
-                val soName = "libbiliroamingn.so"
+                val soName = "libbiliroamingzq.so"
                 File(soDir, soName).outputStream().use { output ->
                     bundledResource("bilibili/lib/$arch/$soName").use { input ->
                         input.copyTo(output)

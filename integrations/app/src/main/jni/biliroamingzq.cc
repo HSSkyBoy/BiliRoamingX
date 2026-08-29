@@ -4,7 +4,7 @@
 #include <pthread.h>
 #include "dobby.h"
 
-#define LOG_TAG "BiliRoamingN"
+#define LOG_TAG "BiliRoamingZQ"
 
 #ifndef NDEBUG
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)

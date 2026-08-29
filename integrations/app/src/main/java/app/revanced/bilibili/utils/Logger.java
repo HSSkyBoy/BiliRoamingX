@@ -22,7 +22,7 @@ public class Logger {
     }
 
     private static final int MAX_LENGTH = 3000;
-    public static final String LOG_TAG = "BiliRoamingN";
+    public static final String LOG_TAG = "BiliRoamingZQ";
 
     public static void debug(boolean trace, @NonNull LogMessage message) {
         if (Settings.Debug.get()) {

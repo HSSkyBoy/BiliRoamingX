@@ -53,5 +53,5 @@ jobs:
         uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: BiliRoamingN-${{ env.VERSION }}
+          name: BiliRoamingZQ-${{ env.VERSION }}
           path: 'build'

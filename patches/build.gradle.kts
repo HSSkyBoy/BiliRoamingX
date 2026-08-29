@@ -23,11 +23,11 @@ tasks.jar {
     exclude("app/revanced/generator")
 
     manifest {
-        attributes["Name"] = "BiliRoamingN Patches"
-        attributes["Description"] = "Patches for BiliRoamingN."
+        attributes["Name"] = "BiliRoamingZQ Patches"
+        attributes["Description"] = "Patches for BiliRoamingZQ."
         attributes["Version"] = version
         attributes["Timestamp"] = System.currentTimeMillis().toString()
-        attributes["Source"] = "git@github.com:BiliRoamingX/BiliRoamingX.git"
+        attributes["Source"] = "git@github.com:HSSkyBoy/BiliRoamingZQ.git"
         attributes["Author"] = "Kofua"
         attributes["License"] = "GNU General Public License v3.0"
     }
@@ -88,7 +88,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/BiliRoamingX/BiliRoamingX")
+            url = uri("https://maven.pkg.github.com/HSSkyBoy/BiliRoamingZQ")
             credentials {
                 username = project.findProperty("gpr.user") as String?
                     ?: System.getenv("GITHUB_ACTOR")
@@ -103,8 +103,8 @@ publishing {
             from(components["java"])
 
             pom {
-                name = "BiliRoamingN Patches"
-                description = "Patches for BiliRoamingN."
+                name = "BiliRoamingZQ Patches"
+                description = "Patches for BiliRoamingZQ."
 
                 licenses {
                     license {
@@ -119,9 +119,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = "scm:git:git://github.com/BiliRoamingX/BiliRoamingX.git"
-                    developerConnection = "scm:git:git@github.com:BiliRoamingX/BiliRoamingX.git"
-                    url = "https://github.com/BiliRoamingX/BiliRoamingX"
+                    connection = "scm:git:git://github.com/HSSkyBoy/BiliRoamingZQ.git"
+                    developerConnection = "scm:git:git@github.com:HSSkyBoy/BiliRoamingZQ.git"
+                    url = "https://github.com/HSSkyBoy/BiliRoamingZQ"
                 }
             }
         }

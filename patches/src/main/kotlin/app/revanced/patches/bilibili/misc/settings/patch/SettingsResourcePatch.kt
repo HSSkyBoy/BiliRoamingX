@@ -9,12 +9,10 @@ import app.revanced.patches.shared.misc.mapping.ResourceMappingPatch
 import app.revanced.util.*
 
 @Patch(
-    name = "BiliRoamingN settings entrance",
-    description = "哔哩漫游N设置入口",
+    name = "BiliRoamingZQ settings entrance",
+    description = "哔哩漫游ZQ设置入口",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ],
     dependencies = [ResourceMappingPatch::class]
 )

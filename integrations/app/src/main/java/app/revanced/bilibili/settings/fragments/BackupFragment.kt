@@ -32,7 +32,7 @@ class BackupFragment : BiliRoamingBaseSettingFragment() {
                     "android_b" -> "Blue"
                     else -> "Pink"
                 }
-                val title = "BiliRoamingN_${identifier}_backup_$time.zip"
+                val title = "BiliRoamingZQ_${identifier}_backup_$time.zip"
                 putExtra(Intent.EXTRA_TITLE, title)
                 addCategory(Intent.CATEGORY_OPENABLE)
             }
