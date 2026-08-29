@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="theseus_playlist_default_order">默认排序</string>
+    <item type="drawable" name="theseus_shape_arrow_button_bg">#00000000</item>
     <string name="biliroaming_settings_title">BRZQ</string>
     <string name="biliroaming_full_screen_quality_title">视频全屏清晰度</string>
     <string name="biliroaming_full_screen_quality_wifi_title">Wi-Fi网络视频全屏清晰度</string>
