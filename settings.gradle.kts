@@ -32,8 +32,24 @@ dependencyResolutionManagement {
         google()
         maven { url = uri("https://jitpack.io") }
         maven {
-            // A repository must be specified for some reason. "registry" is a dummy.
+            name = "zjnsRegistry"
             url = uri("https://maven.pkg.github.com/zjns/registry")
+            credentials {
+                username = gprUser
+                password = gprKey
+            }
+        }
+        maven {
+            name = "revancedRegistry"
+            url = uri("https://maven.pkg.github.com/revanced/registry")
+            credentials {
+                username = gprUser
+                password = gprKey
+            }
+        }
+        maven {
+            name = "ReVancedPatcher"
+            url = uri("https://maven.pkg.github.com/ReVanced/revanced-patcher")
             credentials {
                 username = gprUser
                 password = gprKey
