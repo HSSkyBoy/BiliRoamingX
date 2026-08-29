@@ -21,9 +21,11 @@ dependencyResolutionManagement {
     val gprUser = settings.providers.gradleProperty("gpr.user").orNull
         ?: localProps.getProperty("gpr.user")
         ?: System.getenv("GITHUB_ACTOR")
+        ?: "x-access-token"
     val gprKey = settings.providers.gradleProperty("gpr.key").orNull
         ?: localProps.getProperty("gpr.key")
         ?: System.getenv("GITHUB_TOKEN")
+        ?: System.getenv("GH_TOKEN")
     repositories {
         mavenCentral()
         mavenLocal()
