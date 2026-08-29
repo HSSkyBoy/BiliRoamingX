@@ -94,9 +94,7 @@ object DrawerPatch : BytecodePatch(
                 val insertIdx = implementation!!.instructions.size - 1
                 addInstructions(
                     insertIdx, """
-                    invoke-virtual {p0}, Landroidx/fragment/app/Fragment;->getView()Landroid/view/View;
-                    move-result-object p1
-                    invoke-static {p1}, Lapp/revanced/bilibili/patches/drawer/DrawerPatch;->onMainFrameFragmentViewCreated(Landroid/view/View;)V
+                    invoke-static/range {p1 .. p1}, Lapp/revanced/bilibili/patches/drawer/DrawerPatch;->onMainFrameFragmentViewCreated(Landroid/view/View;)V
                 """.trimIndent()
                 )
             } ?: throw PatchException("can not found BaseMainFrameFragment")
