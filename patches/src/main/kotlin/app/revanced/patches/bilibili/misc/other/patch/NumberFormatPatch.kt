@@ -36,7 +36,7 @@ object NumberFormatPatch : BytecodePatch(
                 """.trimIndent()
                 )
             }.also { mutableClass.methods.add(it) }
-        } ?: throw MineBindAccountStateFingerprint.exception
+        }
         SpaceBindAccountStateFingerprint.result?.run {
             mutableMethod.cloneMutable(registerCount = 2, clearImplementation = true).apply {
                 mutableMethod.name += "_Origin"
@@ -48,6 +48,6 @@ object NumberFormatPatch : BytecodePatch(
                 """.trimIndent()
                 )
             }.also { mutableClass.methods.add(it) }
-        } ?: throw SpaceBindAccountStateFingerprint.exception
+        }
     }
 }
