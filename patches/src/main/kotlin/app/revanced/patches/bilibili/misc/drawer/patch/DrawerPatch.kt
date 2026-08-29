@@ -62,12 +62,11 @@ object DrawerPatch : BytecodePatch(
             context.findClass("Lapp/revanced/bilibili/patches/drawer/DrawerLayoutEx\$LayoutParamsEx;")!!
         val result = DrawerLayoutParamsFingerprint.result
             ?: throw DrawerLayoutParamsFingerprint.exception
-        val gravityField = result.mutableClass.fields.first {
-            it.type == "I" && it.accessFlags.isPublic()
+        val intFields = result.mutableClass.fields.filter { it.type == "I" }
+        val gravityField = intFields.firstOrNull { it.name == "gravity" } ?: intFields.first()
+        val openStateField = (intFields.firstOrNull { it != gravityField } ?: intFields.last()).also {
+            it.accessFlags = it.accessFlags.toPublic()
         }
-        val openStateField = result.mutableClass.fields.first {
-            it.type == "I" && it.accessFlags == 0
-        }.also { it.accessFlags = it.accessFlags.toPublic() }
         layoutParamsExClass.mutableClass.setSuperClass(gravityField.definingClass)
         layoutParamsExClass.mutableClass.methods.run {
             first { it.name == "<init>" }.replaceInstruction(
