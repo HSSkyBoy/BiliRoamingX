@@ -20,16 +20,16 @@ import com.android.tools.smali.dexlib2.Opcode
 )
 object AutoLikePatch : BytecodePatch(setOf(SectionFingerprint)) {
     override fun execute(context: BytecodeContext) {
-        val clazz = SectionFingerprint.result?.mutableClass
-            ?: throw SectionFingerprint.exception
-        val likeMethod = context.classes.first { it.type == clazz.superclass }.virtualMethods.find { m ->
+        val clazz = SectionFingerprint.result?.mutableClass ?: return
+        val superclassDef = context.classes.firstOrNull { it.type == clazz.superclass } ?: return
+        val likeMethod = superclassDef.virtualMethods.find { m ->
             m.parameterTypes.size == 1 && m.returnType == "V" && !AccessFlags.FINAL.isSet(m.accessFlags)
-        } ?: throw PatchException("can not found like method")
-        val realLikeMethod = clazz.methods.first { m ->
+        } ?: return
+        val realLikeMethod = clazz.methods.firstOrNull { m ->
             m.name == likeMethod.name && m.parameterTypes == likeMethod.parameterTypes
-        }
-        val insertIndex = realLikeMethod.implementation!!.instructions
-            .indexOfLast { it.opcode == Opcode.RETURN_VOID }
+        } ?: return
+        val insertIndex = realLikeMethod.implementation?.instructions
+            ?.indexOfLast { it.opcode == Opcode.RETURN_VOID } ?: return
         realLikeMethod.addInstruction(
             insertIndex, """
             invoke-static {p0}, Lapp/revanced/bilibili/patches/AutoLikePatch;->autoLike(Ljava/lang/Object;)V
