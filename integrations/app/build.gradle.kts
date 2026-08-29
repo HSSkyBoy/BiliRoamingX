@@ -18,12 +18,17 @@ setupAppModule {
 
         val verName = version as String
         versionName = verName
-        versionCode = verName.split('.').let { (m, s, f) ->
-            m.toInt() * 1000000 + s.toInt() * 1000 + f.filter { it.isDigit() }.toInt()
-        }
+        versionCode = runCatching {
+            val parts = verName.split('.').map { it.filter(Char::isDigit).toIntOrNull() ?: 0 }
+            when (parts.size) {
+                1 -> parts[0] * 1000000
+                2 -> parts[0] * 1000000 + parts[1] * 1000
+                else -> parts[0] * 1000000 + parts[1] * 1000 + parts[2]
+            }
+        }.getOrDefault(1)
 
         ndk {
-            abiFilters("arm64-v8a", "x86_64")
+            abiFilters += listOf("arm64-v8a", "x86_64")
         }
 
         externalNativeBuild {
@@ -46,7 +51,7 @@ setupAppModule {
                 )
                 cFlags("-std=c18", *flags)
                 cppFlags("-std=c++20", *flags)
-                targets("biliroamingn")
+                targets("biliroamingzq")
             }
         }
     }

@@ -8,10 +8,7 @@
 /.vscode
 /*.log
 /.idea/*
-!/.idea/codeStyles
 .kotlin
-/bilibili_8.98.0_apk
-/BRX
 /patches/bin/main/*
 /integrations/ksp/bin/main/*
 /build-logic/bin/main/*

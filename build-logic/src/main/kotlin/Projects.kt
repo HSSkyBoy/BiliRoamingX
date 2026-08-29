@@ -42,6 +42,10 @@ private inline fun <reified T : BaseExtension> Project.setupBaseModule(crossinli
             minSdk = Versions.MIN_SDK
             targetSdk = Versions.TARGET_SDK
         }
+        compileOptions {
+            sourceCompatibility = org.gradle.api.JavaVersion.VERSION_21
+            targetCompatibility = org.gradle.api.JavaVersion.VERSION_21
+        }
         buildTypes {
             create("dev")
         }
