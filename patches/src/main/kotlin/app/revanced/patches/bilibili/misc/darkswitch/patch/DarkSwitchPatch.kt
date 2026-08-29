@@ -40,7 +40,7 @@ object DarkSwitchPatch : BytecodePatch(
             }
         }
 
-        SwitchDarkModeFingerprint.patch() ?: throw SwitchDarkModeFingerprint.exception
+        SwitchDarkModeFingerprint.patch()
         HdNewSwitchDarkModeFingerprint.patch()
     }
 }
