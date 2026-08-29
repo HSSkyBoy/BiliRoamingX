@@ -31,11 +31,11 @@ class BUpgradeInfo(
 }
 
 object Upgrade : ApiHook() {
-    private const val UPGRADE_CHECK_API = "https://api.github.com/repos/BiliRoamingX/BiliRoamingX-PreBuilds/releases"
+    private const val UPGRADE_CHECK_API = "https://api.github.com/repos/HSSkyBoy/BiliRoamingZQ/releases"
     private val changelogRegex = Regex("""版本信息：(.*?)\n(.*)""", RegexOption.DOT_MATCHES_ALL)
-    var fromSelf = false
+    var fromSelf = true
 
-    fun customUpdate(fromSelf: Boolean = false): Boolean {
+    fun customUpdate(fromSelf: Boolean = true): Boolean {
         return (fromSelf || Settings.CustomUpdate()) && isOsArchArm64 && isPrebuilt
     }
 
@@ -48,7 +48,7 @@ object Upgrade : ApiHook() {
         return if (customUpdate(fromSelf = fromSelf))
             (runCatchingOrNull { checkUpgrade().toString() }
                 ?: """{"code":-1,"message":"检查更新失败，请稍后再试/(ㄒoㄒ)/~~""")
-                .also { fromSelf = false }
+                .also { fromSelf = true }
         else if (Settings.BlockUpdate())
             """{"code":-1,"message":"哼，休想要我更新！<(￣︶￣)>"}"""
         else response
@@ -73,8 +73,10 @@ object Upgrade : ApiHook() {
         val pageUrl = "$UPGRADE_CHECK_API?page=$page&per_page=100"
         val response = JSONArray(URL(pageUrl).readText())
         val mobiApp = Utils.getMobiApp()
+        val useTag = "$mobiApp-"
+        val useTitle = "新版 BiliRoamingZQ"
         for (data in response) {
-            if (!data.optString("tag_name").startsWith("$mobiApp-"))
+            if (!data.optString("tag_name").startsWith(useTag))
                 continue
             val body = data.optString("body").replace("\r\n", "\n")
             val values = changelogRegex.matchEntire(body)?.groupValues ?: break
@@ -84,14 +86,19 @@ object Upgrade : ApiHook() {
                 ?.optJSONObject(0)?.optString("browser_download_url") ?: break
             Logger.debug { "Upgrade, versionSum: $versionSum, changelog: $changelog, url: $url" }
             val info = BUpgradeInfo(versionSum, url, changelog)
-            if (sn < info.sn || (sn == info.sn && patchVersionCode < info.patchVersionCode)) {
+            val hasPatchUpdate = if (patchVersionCode > 0 && info.patchVersionCode > 0) {
+                info.patchVersionCode > patchVersionCode
+            } else {
+                compareVersion(info.patchVersion, patchVersion) > 0
+            }
+            if (sn < info.sn || (sn == info.sn && hasPatchUpdate)) {
                 val sameApp = sn == info.sn
                 val samePatch = patchVersion == info.patchVersion
                 val newChangelog = StringBuilder(info.changelog)
                 val appVersionChange =
-                    if (sameApp) "" else "APP版本：$versionName($versionCode) --> ${info.version}(${info.versionCode})"
+                    if (sameApp) "" else "BiliBili ：$versionName($versionCode) --> ${info.version}(${info.versionCode})"
                 val patchVersionChange =
-                    if (samePatch) "" else "漫游N版本：$patchVersion --> ${info.patchVersion}"
+                    if (samePatch) "" else "BiliRoamingZQ ：$patchVersion --> ${info.patchVersion}"
                 val changeSum = arrayOf(appVersionChange, patchVersionChange)
                     .filterNot { it.isEmpty() }.joinToString(separator = "\n")
                 if (changeSum.isNotEmpty()) {
@@ -103,7 +110,7 @@ object Upgrade : ApiHook() {
                     "message" to "0",
                     "ttl" to 1,
                     "data" to mapOf(
-                        "title" to "新版漫游N集成包",
+                        "title" to useTitle,
                         "content" to newChangelog.toString(),
                         "version" to info.version,
                         "version_code" to if (sameApp) info.versionCode + 1 else info.versionCode,
@@ -121,9 +128,39 @@ object Upgrade : ApiHook() {
                     Logger.debug { "Upgrade check result: $it" }
                 }
             } else {
-                return mapOf("code" to -1, "message" to "未发现新版漫游N集成包！").toJSONObject()
+                return mapOf("code" to -1, "message" to "未发现新版 BiliRoamingZQ ！").toJSONObject()
             }
         }
         return null
     }
+
+    /**
+     * 语义化版本号比较：remote > local 返回 1，remote < local 返回 -1，相等返回 0。
+     * 支持 "1.26.1"、"1.22.5.r1864"、"v1.26.1" 等多种格式。
+     */
+    fun compareVersion(remote: String, local: String): Int {
+        val remoteParts = parseVersionParts(remote)
+        val localParts = parseVersionParts(local)
+        val partCount = maxOf(remoteParts.size, localParts.size)
+        for (index in 0 until partCount) {
+            val remotePart = remoteParts.getOrElse(index) { 0 }
+            val localPart = localParts.getOrElse(index) { 0 }
+            if (remotePart != localPart) return if (remotePart > localPart) 1 else -1
+        }
+        return 0
+    }
+
+    private fun parseVersionParts(version: String): List<Int> =
+        normalizeVersion(version)
+            .split('.', '-', '_')
+            .mapNotNull { part ->
+                val digits = part.filter(Char::isDigit)
+                digits.toIntOrNull()
+            }
+
+    private fun normalizeVersion(version: String): String =
+        version.trim()
+            .removePrefix("v")
+            .removePrefix("V")
+            .trim()
 }

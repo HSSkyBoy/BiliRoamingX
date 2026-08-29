@@ -177,14 +177,7 @@ class AboutFragment : BiliRoamingBaseSettingFragment() {
     }
 
     private fun isNewVersion(version: String): Boolean {
-        val parts = version.split('.')
-        val mVersion = BuildConfig.VERSION_NAME
-        val mParts = mVersion.split('.')
-        if (mParts.size <= 3)
-            return mVersion != version
-        if (parts.size >= 3 && parts[0] == mParts[0] && parts[1] == mParts[1] && parts[2] == mParts[2])
-            return false
-        return true
+        return Upgrade.compareVersion(version, BuildConfig.VERSION_NAME) > 0
     }
 
     private fun checkLatestRelease() = Utils.async {
@@ -228,7 +221,7 @@ class AboutFragment : BiliRoamingBaseSettingFragment() {
                 .setTitle(styledTitle)
                 .setView(wrapperView)
                 .setPositiveButton(Utils.getString("biliroaming_view")) { _, _ ->
-                    val tagUrl = "https://github.com/BiliRoamingX/BiliRoamingX/releases/tag/$tag"
+                    val tagUrl = "https://github.com/HSSkyBoy/BiliRoamingZQ/releases/tag/$tag"
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(tagUrl))
                     startActivity(intent)
                 }
@@ -238,7 +231,7 @@ class AboutFragment : BiliRoamingBaseSettingFragment() {
     }
 
     private fun latestRelease() = runCatching {
-        val releaseUrl = "https://api.github.com/repos/BiliRoamingX/BiliRoamingX/releases/latest"
+        val releaseUrl = "https://api.github.com/repos/HSSkyBoy/BiliRoamingZQ/releases/latest"
         val response = HttpClient.get(releaseUrl)?.json()
             ?: return@runCatching null
         val tag = response.optString("tag_name")
