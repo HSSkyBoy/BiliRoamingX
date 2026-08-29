@@ -77,7 +77,7 @@ object PegasusPatch : BytecodePatch(
         }
         fun MutableMethod.hookOnFeedClick() = addInstructionsWithLabels(
             0, """
-            invoke-static {p3}, Lapp/revanced/bilibili/patches/json/PegasusPatch;->onFeedClick(Lcom/bilibili/app/comm/list/common/data/DislikeReason;)Z
+            invoke-static/range {p3 .. p3}, Lapp/revanced/bilibili/patches/json/PegasusPatch;->onFeedClick(Lcom/bilibili/app/comm/list/common/data/DislikeReason;)Z
             move-result v0
             if-eqz v0, :jump
             return-void
