@@ -19,7 +19,7 @@ import app.revanced.util.exception
 object BLogPatch : BytecodePatch(setOf(LogcatAdapterFingerprint)) {
     override fun execute(context: BytecodeContext) {
         LogcatAdapterFingerprint.result?.mutableClass?.methods?.run {
-            val origMethod = first { it.returnType == "Z" && it.parameterTypes == listOf("I", "Ljava/lang/String;") }
+            val origMethod = firstOrNull { it.returnType == "Z" && it.parameterTypes == listOf("I", "Ljava/lang/String;") } ?: return@run
             origMethod.cloneMutable(registerCount = 4, clearImplementation = true).apply {
                 origMethod.name += "_Origin"
                 addInstructionsWithLabels(
@@ -36,6 +36,6 @@ object BLogPatch : BytecodePatch(setOf(LogcatAdapterFingerprint)) {
                 """.trimIndent()
                 )
             }.also { add(it) }
-        } ?: throw LogcatAdapterFingerprint.exception
+        }
     }
 }
