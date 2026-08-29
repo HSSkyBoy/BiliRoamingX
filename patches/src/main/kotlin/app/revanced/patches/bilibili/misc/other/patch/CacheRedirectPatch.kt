@@ -35,42 +35,46 @@ object CacheRedirectPatch : MultiMethodBytecodePatch(
         } else {
             "bili_app_list_item_super_menu_dialog_menu"
         }
-        val dialogMenuLayoutId = ResourceMappingPatch.resourceMappings.first {
+        val dialogMenuLayoutId = ResourceMappingPatch.resourceMappings.firstOrNull {
             it.type == "layout" && it.name == dialogMenuLayoutName
-        }.id
-        val dialogMenuLayoutIdField = context.classes.firstNotNullOf { c ->
-            c.fields.find { f ->
-                f.accessFlags.let { it.isPublic() && it.isStatic() }
-                        && f.type == "I" && (f.initialValue as? IntEncodedValue)?.value == dialogMenuLayoutId
-            }
-        }
-        context.classes.firstNotNullOf { c ->
-            if (c.methods.asSequence().filterNot { m ->
-                    m.accessFlags.let { it.isAbstract() || it.isNative() }
-                }.any { m ->
-                    m.implementation!!.instructions.any {
-                        it.opcode == Opcode.SGET && (it as ReferenceInstruction).reference == dialogMenuLayoutIdField
-                    }
-                }) c else null
-        }.let { c ->
-            val onClickOriginListenerType = "Lapp/revanced/bilibili/widget/OnClickOriginListener;"
-            c.proxy(context).run {
-                interfaces.add(onClickOriginListenerType)
-                val originOnClickMethod = methods.first {
-                    it.name == "onClick" && it.parameterTypes == listOf("Landroid/view/View;") && it.returnType == "V"
+        }?.id
+        if (dialogMenuLayoutId != null) {
+            val dialogMenuLayoutIdField = context.classes.asSequence().mapNotNull { c ->
+                c.fields.find { f ->
+                    f.accessFlags.let { it.isPublic() && it.isStatic() }
+                            && f.type == "I" && (f.initialValue as? IntEncodedValue)?.value == dialogMenuLayoutId
                 }
-                originOnClickMethod.cloneMutable(
-                    registerCount = 2,
-                    clearImplementation = true
-                ).apply {
-                    originOnClickMethod.name += "_Origin"
-                    addInstructions(
-                        0, """
-                        invoke-static {p1, p0}, Lapp/revanced/bilibili/patches/CacheRedirectPatch;->onMenuClick(Landroid/view/View;$onClickOriginListenerType)V
-                        return-void
-                    """.trimIndent()
-                    )
-                }.also { methods.add(it) }
+            }.firstOrNull()
+            if (dialogMenuLayoutIdField != null) {
+                context.classes.firstOrNull { c ->
+                    c.methods.asSequence().filterNot { m ->
+                        m.accessFlags.let { it.isAbstract() || it.isNative() }
+                    }.any { m ->
+                        m.implementation?.instructions?.any {
+                            it.opcode == Opcode.SGET && (it as? ReferenceInstruction)?.reference == dialogMenuLayoutIdField
+                        } == true
+                    }
+                }?.let { c ->
+                    val onClickOriginListenerType = "Lapp/revanced/bilibili/widget/OnClickOriginListener;"
+                    c.proxy(context).run {
+                        interfaces.add(onClickOriginListenerType)
+                        val originOnClickMethod = methods.firstOrNull {
+                            it.name == "onClick" && it.parameterTypes == listOf("Landroid/view/View;") && it.returnType == "V"
+                        } ?: return@let
+                        originOnClickMethod.cloneMutable(
+                            registerCount = 2,
+                            clearImplementation = true
+                        ).apply {
+                            originOnClickMethod.name += "_Origin"
+                            addInstructions(
+                                0, """
+                                invoke-static {p1, p0}, Lapp/revanced/bilibili/patches/CacheRedirectPatch;->onMenuClick(Landroid/view/View;$onClickOriginListenerType)V
+                                return-void
+                            """.trimIndent()
+                            )
+                        }.also { methods.add(it) }
+                    }
+                }
             }
         }
 /*
