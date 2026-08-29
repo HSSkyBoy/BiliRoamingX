@@ -209,6 +209,15 @@ object SubtitleHelper {
         }
     }
 
+    private const val WATERMARK_BASE64 = "6K+35rOo5oSP77yM56uZ5YaF5a6j5Lyg5ryr5ri45oiW6ISa5pys5Lya6KKr5ouJ6buR"
+    private val WATERMARK_TEXT: String by lazy {
+        try {
+            String(android.util.Base64.decode(WATERMARK_BASE64, android.util.Base64.DEFAULT), Charsets.UTF_8)
+        } catch (_: Throwable) {
+            "请注意，站内宣传漫游或脚本会被拉黑"
+        }
+    }
+
     @JvmStatic
     fun convert(json: String): String {
         val subJson = JSONObject(json)
@@ -223,7 +232,7 @@ object SubtitleHelper {
         subBody.asSequence<JSONObject>().zip(lines.asSequence()).forEach { (obj, line) ->
             obj.put("content", line)
         }
-        subBody = subBody.appendInfo("请注意，站内宣传漫游或脚本会被拉黑")
+        subBody = subBody.ensureWatermark()
         return subJson.apply {
             put("body", subBody)
         }.toString()
@@ -272,10 +281,22 @@ object SubtitleHelper {
             val prettyContent = content.replace("。。。", "...").removeSuffix("，").removeSuffix("。")
             item.put("content", prettyContent)
         }
-        subBody = subBody.appendInfo("请注意，站内宣传漫游或脚本会被拉黑")
+        subBody = subBody.ensureWatermark()
         return subJson.apply {
             put("body", subBody)
         }.toString()
+    }
+
+    private fun JSONArray.ensureWatermark(): JSONArray {
+        if (length() == 0) return this
+        val text = WATERMARK_TEXT
+        for (i in 0 until length()) {
+            val obj = optJSONObject(i) ?: continue
+            if (obj.optString("content").contains(text)) {
+                return this
+            }
+        }
+        return appendInfo(text)
     }
 
     private fun JSONArray.appendInfo(content: String): JSONArray {
@@ -373,6 +394,7 @@ object SubtitleHelper {
             }
         }
 
+        result.put("body", body.ensureWatermark())
         return result.toString()
     }
 
@@ -437,6 +459,7 @@ object SubtitleHelper {
                 put("content", content.toString())
             })
         }
+        result.put("body", body.ensureWatermark())
         return result.toString()
     }
 

@@ -78,7 +78,8 @@ object SubtitleImportSavePatch : MultiMethodBytecodePatch(
         val widgetResult = FunctionWidgetServiceFingerprint.result
         val widgetServiceInterface = widgetResult?.classDef?.interfaces?.first()
             ?: throw FunctionWidgetServiceFingerprint.exception
-        PlayerSubtitleFunctionWidgetFingerprint.result.forEach { result ->
+        val playerSubtitleResults = PlayerSubtitleFunctionWidgetFingerprint.result.distinctBy { it.classDef.type }
+        playerSubtitleResults.forEach { result ->
             Field(
                 definingClass = result.classDef.type,
                 name = "interactLayerServiceForBiliRoaming",
@@ -104,7 +105,7 @@ object SubtitleImportSavePatch : MultiMethodBytecodePatch(
                 )
             ).toMutable().let { result.mutableClass.fields.add(it) }
         }
-        val absWidgetClass = PlayerSubtitleFunctionWidgetFingerprint.result.first().classDef.superclass
+        val absWidgetClass = playerSubtitleResults.first().classDef.superclass
         val widgetTokenClass = FunctionWidgetTokenFingerprint.result?.classDef?.type
             ?: throw FunctionWidgetTokenFingerprint.exception
         val hideWidgetMethod = widgetResult.classDef.methods.first {

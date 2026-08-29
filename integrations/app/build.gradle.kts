@@ -136,6 +136,23 @@ gradle.taskGraph.whenReady {
     }
 }
 
+tasks.register("verifyReleasePackageInfoCreatorCapture") {
+    group = "verification"
+    description = "Verifies that R8 retains the original PackageInfo Parcelable.Creator capture"
+    dependsOn("minifyReleaseWithR8")
+
+    val seedsFile = layout.buildDirectory.file("outputs/mapping/release/seeds.txt")
+    inputs.file(seedsFile)
+
+    doLast {
+        val creatorField = "app.revanced.bilibili.patches.main.ApplicationDelegate\$PackageInfoCreator: " +
+            "android.os.Parcelable\$Creator originalCreator"
+        check(seedsFile.get().asFile.readLines().contains(creatorField)) {
+            "R8 removed the captured original PackageInfo.CREATOR; the wrapper would recursively call itself"
+        }
+    }
+}
+
 dependencies {
     implementation(projects.integrations.extend)
     implementation(libs.hiddenapibypass)

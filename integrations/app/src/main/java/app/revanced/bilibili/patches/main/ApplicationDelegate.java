@@ -136,42 +136,7 @@ public abstract class ApplicationDelegate extends Application {
     @SafeVarargs
     private static void fakeSignatures(Pair<String, String>... pairs) {
         Parcelable.Creator<PackageInfo> originalCreator = PackageInfo.CREATOR;
-        Parcelable.Creator<PackageInfo> newCreator = new Parcelable.Creator<>() {
-            @Override
-            public PackageInfo createFromParcel(Parcel source) {
-                PackageInfo packageInfo = originalCreator.createFromParcel(source);
-                if (!originalSignatures.containsKey(packageInfo.packageName) && packageInfo.signatures != null && packageInfo.signatures.length > 0) {
-                    Signature signature = packageInfo.signatures[0];
-                    String signatureBase64 = Base64.encodeToString(signature.toByteArray(), Base64.NO_WRAP);
-                    originalSignatures.put(packageInfo.packageName, signatureBase64);
-                }
-                for (Pair<String, String> pair : pairs) {
-                    String packageName = pair.first;
-                    String signatureData = pair.second;
-                    if (packageInfo.packageName.equals(packageName)) {
-                        Signature fakeSignature = new Signature(Base64.decode(signatureData, Base64.DEFAULT));
-                        if (packageInfo.signatures != null && packageInfo.signatures.length > 0) {
-                            packageInfo.signatures[0] = fakeSignature;
-                        }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            if (packageInfo.signingInfo != null) {
-                                Signature[] signaturesArray = packageInfo.signingInfo.getApkContentsSigners();
-                                if (signaturesArray != null && signaturesArray.length > 0) {
-                                    signaturesArray[0] = fakeSignature;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
-                return packageInfo;
-            }
-
-            @Override
-            public PackageInfo[] newArray(int size) {
-                return originalCreator.newArray(size);
-            }
-        };
+        Parcelable.Creator<PackageInfo> newCreator = new PackageInfoCreator(originalCreator, pairs);
         try {
             Reflex.setStaticObjectField(PackageInfo.class, "CREATOR", newCreator);
         } catch (Throwable t) {
@@ -200,6 +165,52 @@ public abstract class ApplicationDelegate extends Application {
         } catch (NoSuchFieldError ignored) {
         } catch (Throwable t) {
             Logger.error(t, () -> "Failed to clear Parcel.sPairedCreators");
+        }
+    }
+
+    @Keep
+    private static final class PackageInfoCreator implements Parcelable.Creator<PackageInfo> {
+        private final Parcelable.Creator<PackageInfo> originalCreator;
+        private final Pair<String, String>[] pairs;
+
+        private PackageInfoCreator(Parcelable.Creator<PackageInfo> originalCreator, Pair<String, String>[] pairs) {
+            this.originalCreator = originalCreator;
+            this.pairs = pairs;
+        }
+
+        @Override
+        public PackageInfo createFromParcel(Parcel source) {
+            PackageInfo packageInfo = originalCreator.createFromParcel(source);
+            if (!originalSignatures.containsKey(packageInfo.packageName) && packageInfo.signatures != null && packageInfo.signatures.length > 0) {
+                Signature signature = packageInfo.signatures[0];
+                String signatureBase64 = Base64.encodeToString(signature.toByteArray(), Base64.NO_WRAP);
+                originalSignatures.put(packageInfo.packageName, signatureBase64);
+            }
+            for (Pair<String, String> pair : pairs) {
+                String packageName = pair.first;
+                String signatureData = pair.second;
+                if (packageInfo.packageName.equals(packageName)) {
+                    Signature fakeSignature = new Signature(Base64.decode(signatureData, Base64.DEFAULT));
+                    if (packageInfo.signatures != null && packageInfo.signatures.length > 0) {
+                        packageInfo.signatures[0] = fakeSignature;
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        if (packageInfo.signingInfo != null) {
+                            Signature[] signaturesArray = packageInfo.signingInfo.getApkContentsSigners();
+                            if (signaturesArray != null && signaturesArray.length > 0) {
+                                signaturesArray[0] = fakeSignature;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+            return packageInfo;
+        }
+
+        @Override
+        public PackageInfo[] newArray(int size) {
+            return originalCreator.newArray(size);
         }
     }
 
