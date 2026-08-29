@@ -21,14 +21,13 @@ object TrialQualityPatch : MultiMethodBytecodePatch(
 ) {
     override fun execute(context: BytecodeContext) {
         super.execute(context)
-        val patchMethod = context.findClass("Lapp/revanced/bilibili/patches/TrialQualityPatch;")!!
-            .mutableClass.methods.first { it.name == "onBindOnline" }
-        QualityViewHolderFingerprint.result.associate { r ->
-            r.mutableClass.methods to r.mutableClass.methods.first { m ->
+        val patchMethod = context.findClass("Lapp/revanced/bilibili/patches/TrialQualityPatch;")?.mutableClass
+            ?.methods?.firstOrNull { it.name == "onBindOnline" } ?: return
+        QualityViewHolderFingerprint.result.mapNotNull { r ->
+            val m = r.mutableClass.methods.firstOrNull { m ->
                 m.parameterTypes.let { it.size == 5 && it[1] == "Z" && it[3] == "Landroid/widget/TextView;" && it[4] == "Landroid/widget/TextView;" }
-            }
-        }.ifEmpty {
-            throw QualityViewHolderFingerprint.exception
+            } ?: return@mapNotNull null
+            r.mutableClass.methods to m
         }.forEach { (methods, method) ->
             val originMethod = method.cloneMutable(name = method.name + "_Origin")
                 .also { methods.add(it) }
