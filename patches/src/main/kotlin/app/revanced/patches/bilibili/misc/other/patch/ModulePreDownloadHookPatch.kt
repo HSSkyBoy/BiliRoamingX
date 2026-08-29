@@ -28,7 +28,7 @@ object ModulePreDownloadHookPatch : BytecodePatch(setOf(ConfigV3PreloadFingerpri
             :jump
             nop
         """.trimIndent()
-        ) ?: throw ConfigV3PreloadFingerprint.exception
+        )
         // prevent pre download small app engine
         WebConfigFingerprint.result?.mutableMethod?.addInstructionsWithLabels(
             0, """
@@ -40,6 +40,6 @@ object ModulePreDownloadHookPatch : BytecodePatch(setOf(ConfigV3PreloadFingerpri
             :jump
             nop
         """.trimIndent()
-        ) ?: throw WebConfigFingerprint.exception
+        )
     }
 }
