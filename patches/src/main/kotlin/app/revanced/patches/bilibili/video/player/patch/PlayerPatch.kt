@@ -15,9 +15,7 @@ import app.revanced.util.exception
     name = "Player core",
     description = "播放器核心hook",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object PlayerPatch : BytecodePatch(setOf(PlayerSeekToFingerprint, RemoteServiceHandlerOnStartFingerprint)) {

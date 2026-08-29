@@ -15,9 +15,7 @@ import com.android.tools.smali.dexlib2.AccessFlags
     name = "Fake not in multi window mode",
     description = "播放页伪装未处于多窗口模式",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object FakeNotInMultiWindowPatch : BytecodePatch() {

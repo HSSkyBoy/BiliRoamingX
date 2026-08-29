@@ -20,9 +20,7 @@ import com.android.tools.smali.dexlib2.iface.reference.FieldReference
     name = "Force comment time navigable",
     description = "允许分P及交互视频评论时间点可点击",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object ForceCommentNavigablePatch : BytecodePatch(fingerprints = setOf(CommentConfigFingerprint)) {

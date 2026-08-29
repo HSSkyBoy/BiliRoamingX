@@ -13,9 +13,7 @@ import app.revanced.patches.bilibili.utils.exception
     name = "Trial quality",
     description = "试用画质辅助补丁",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object TrialQualityPatch : MultiMethodBytecodePatch(

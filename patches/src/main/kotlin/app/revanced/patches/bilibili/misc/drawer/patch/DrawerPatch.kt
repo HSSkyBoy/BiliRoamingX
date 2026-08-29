@@ -21,9 +21,7 @@ import app.revanced.util.exception
     name = "Drawer",
     description = "我的页面移至侧滑栏辅助补丁",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object DrawerPatch : BytecodePatch(

@@ -11,9 +11,7 @@ import app.revanced.patcher.patch.annotation.Patch
     name = "Comment word search url",
     description = "屏蔽评论关键词搜索功能",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object CommentReplyUrlPatch : BytecodePatch() {

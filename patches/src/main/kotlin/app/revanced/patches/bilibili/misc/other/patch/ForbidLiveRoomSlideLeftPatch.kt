@@ -11,7 +11,9 @@ import app.revanced.util.exception
 @Patch(
     name = "Forbid live room slide left",
     description = "禁止直播间向左滑动弹出抽屉",
-    compatiblePackages = [CompatiblePackage(name = "tv.danmaku.bili"), CompatiblePackage(name = "com.bilibili.app.in")]
+    compatiblePackages = [
+        CompatiblePackage(name = "tv.danmaku.bili")
+    ]
 )
 object ForbidLiveRoomSlideLeftPatch :
     BytecodePatch(setOf(LiveRoomTouchDispatchViewModelFingerprint)) {

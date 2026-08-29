@@ -17,8 +17,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
     name = "Force hardware codec",
     description = "强制硬件解码",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object HwCodecPatch : BytecodePatch(setOf(IjkMediaPlayerOptionsFingerprint)) {

@@ -20,9 +20,7 @@ import com.android.tools.smali.dexlib2.iface.value.IntEncodedValue
     name = "Cache redirect",
     description = "缓存行为重定向，允许外部工具直接下载",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ],
     dependencies = [ResourceMappingPatch::class, SettingsResourcePatch::class]
 )

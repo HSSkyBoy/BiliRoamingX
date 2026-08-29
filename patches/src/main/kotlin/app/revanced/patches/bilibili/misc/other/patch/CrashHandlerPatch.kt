@@ -13,9 +13,7 @@ import app.revanced.patches.bilibili.utils.proxy
     name = "Crash handler",
     description = "崩溃日志记录",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object CrashHandlerPatch : BytecodePatch() {

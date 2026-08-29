@@ -9,9 +9,7 @@ import java.io.File
 
 @Patch(
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object BiliLayoutAdjustResourcesPatch : ResourcePatch() {

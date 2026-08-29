@@ -22,9 +22,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.formats.Instruction35c
     name = "Forbid live room auto float",
     description = "禁止直播间点小窗播放时自动开启“播放被中断时自动小窗播放”",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object ForbidLiveRoomAutoFloatPatch : BytecodePatch(setOf(LiveRoomSetFloatWindowFingerprint)) {

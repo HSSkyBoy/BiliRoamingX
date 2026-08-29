@@ -11,9 +11,7 @@ import app.revanced.util.walk
     name = "Fix app setting preference layout",
     description = "APP设置部分页面字体大小不统一修复",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object BiliSettingPreferenceLayoutPatch : ResourcePatch() {

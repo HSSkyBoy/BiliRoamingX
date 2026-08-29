@@ -16,9 +16,7 @@ import com.android.tools.smali.dexlib2.AccessFlags
     name = "OkHttp",
     description = "OkHttp网络请求响应Hook",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object OkHttpPatch : MultiMethodBytecodePatch(

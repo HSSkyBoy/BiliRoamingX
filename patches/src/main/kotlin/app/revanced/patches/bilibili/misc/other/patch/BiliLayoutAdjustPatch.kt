@@ -13,9 +13,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.formats.Instruction21s
     name = "Bili adjust layout",
     description = "调整部分布局UI",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ],
     dependencies = [BiliLayoutAdjustResourcesPatch::class],
 )

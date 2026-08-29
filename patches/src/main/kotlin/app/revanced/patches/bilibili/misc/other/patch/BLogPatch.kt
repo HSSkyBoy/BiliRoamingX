@@ -13,9 +13,7 @@ import app.revanced.util.exception
     name = "BLog",
     description = "放宽日志打印级别",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object BLogPatch : BytecodePatch(setOf(LogcatAdapterFingerprint)) {

@@ -11,9 +11,7 @@ import app.revanced.util.set
     name = "Override certificate pinning",
     description = "覆盖哔哩哔哩的证书固定配置，允许抓包",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object OverrideCertificatePinningPatch : ResourcePatch() {

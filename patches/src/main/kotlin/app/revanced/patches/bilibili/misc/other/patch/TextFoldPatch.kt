@@ -15,9 +15,7 @@ import com.android.tools.smali.dexlib2.iface.reference.FieldReference
     name = "Text fold",
     description = "文本折叠控制",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object TextFoldPatch : BytecodePatch() {

@@ -13,7 +13,9 @@ import app.revanced.util.findMutableMethodOf
 @Patch(
     name = "Remove vip section",
     description = "移除我的页面大会员横幅",
-    compatiblePackages = [CompatiblePackage(name = "tv.danmaku.bili"), CompatiblePackage(name = "com.bilibili.app.in")]
+    compatiblePackages = [
+        CompatiblePackage(name = "tv.danmaku.bili")
+    ]
 )
 object RemoveVipSectionPatch : BytecodePatch() {
     override fun execute(context: BytecodeContext) {

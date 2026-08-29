@@ -16,9 +16,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
     name = "Toast",
     description = "调用APP自带Toast补丁",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object ToastPatch : BytecodePatch() {

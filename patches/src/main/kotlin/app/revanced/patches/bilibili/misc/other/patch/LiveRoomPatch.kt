@@ -12,9 +12,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.formats.Instruction35c
     name = "Disable live room double click",
     description = "禁用直播间双击点赞",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object LiveRoomPatch : BytecodePatch() {

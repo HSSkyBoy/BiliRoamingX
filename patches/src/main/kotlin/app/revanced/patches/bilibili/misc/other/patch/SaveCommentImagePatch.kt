@@ -14,9 +14,7 @@ import com.android.tools.smali.dexlib2.Opcode
     name = "Save comment images",
     description = "保存评论图片补丁",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object SaveCommentImagePatch : BytecodePatch(setOf(CommentImageSetLayoutBindViewFingerprint)) {

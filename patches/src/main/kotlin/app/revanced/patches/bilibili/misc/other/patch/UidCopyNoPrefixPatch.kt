@@ -13,9 +13,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
     name = "Uid copy no prefix",
     description = "用户空间页复制UID时去掉“UID:”前缀",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object UidCopyNoPrefixPatch : BytecodePatch(setOf(UidCopyFingerprint)) {

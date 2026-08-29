@@ -16,9 +16,7 @@ import com.android.tools.smali.dexlib2.Opcode
     name = "Subtitle style",
     description = "字幕样式相关补丁",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object SubtitlePatch : BytecodePatch() {

@@ -12,9 +12,7 @@ import app.revanced.util.set
     name = "Append signature info for LSPatch",
     description = "meta-data 附加原始签名信息，允许 LSPatch 及类似物处理过的 APP 获取本 APP 的原始签名",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object AppendSignatureInfoPatch : ResourcePatch() {

@@ -29,8 +29,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
     name = "Music notification",
     description = "原生音乐通知样式",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object MusicNotificationPatch : BytecodePatch(

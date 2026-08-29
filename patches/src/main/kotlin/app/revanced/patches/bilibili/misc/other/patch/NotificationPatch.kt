@@ -15,9 +15,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.Instruction
     name = "Notification icon",
     description = "通知图标修复",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 @Suppress("unused")

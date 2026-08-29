@@ -11,9 +11,7 @@ import com.android.tools.smali.dexlib2.AccessFlags
     name = "Modify modifier",
     description = "修改类或类成员修饰符，方便操作",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object ModifyModifierPatch : BytecodePatch() {

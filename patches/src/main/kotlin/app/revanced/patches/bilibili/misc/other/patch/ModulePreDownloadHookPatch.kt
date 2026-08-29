@@ -13,8 +13,7 @@ import app.revanced.util.exception
     name = "Prevent pre download module",
     description = "阻止模块预下载",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "com.bilibili.app.in"),
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object ModulePreDownloadHookPatch : BytecodePatch(setOf(ConfigV3PreloadFingerprint, WebConfigFingerprint)) {

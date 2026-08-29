@@ -16,9 +16,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
     name = "Long press playback speed",
     description = "自定义播放器长按播放速度",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object LongPressPlaybackSpeedPatch : MultiMethodBytecodePatch(

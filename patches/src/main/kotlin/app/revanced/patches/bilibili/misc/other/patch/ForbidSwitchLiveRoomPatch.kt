@@ -11,9 +11,7 @@ import app.revanced.patcher.patch.annotation.Patch
     name = "Forbid switch live room",
     description = "禁止上下滑动切换直播间",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object ForbidSwitchLiveRoomPatch : BytecodePatch() {

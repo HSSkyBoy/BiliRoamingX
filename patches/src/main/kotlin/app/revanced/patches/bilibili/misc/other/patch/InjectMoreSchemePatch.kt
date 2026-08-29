@@ -13,9 +13,7 @@ import app.revanced.util.set
     name = "Inject more scheme",
     description = "向 AndroidManifest.xml 注入更多可处理的 deep link",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object InjectMoreSchemePatch : ResourcePatch() {

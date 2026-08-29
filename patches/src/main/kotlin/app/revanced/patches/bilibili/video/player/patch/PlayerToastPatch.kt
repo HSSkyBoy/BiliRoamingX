@@ -18,9 +18,7 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
     name = "Player toast",
     description = "播放器特定样式toast显示拦截",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object PlayerToastPatch : BytecodePatch(setOf(ShowPlayerToastFingerprint)) {

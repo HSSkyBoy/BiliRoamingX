@@ -13,9 +13,7 @@ import com.android.tools.smali.dexlib2.iface.value.StringEncodedValue
     name = "Channel model fix",
     description = "频道相关 model 类构造修复(官方 BUG)",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object ChannelModelFixPatch : BytecodePatch() {

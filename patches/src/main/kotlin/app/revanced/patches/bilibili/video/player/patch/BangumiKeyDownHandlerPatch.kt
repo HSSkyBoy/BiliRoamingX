@@ -12,7 +12,9 @@ import com.android.tools.smali.dexlib2.Opcode
 @Patch(
     name = "Enable Key mapping",
     description = "HD版启用番剧页面键盘按键映射",
-    compatiblePackages = [CompatiblePackage(name = "tv.danmaku.bilibilihd")]
+    compatiblePackages = [
+        CompatiblePackage(name = "tv.danmaku.bili")
+    ]
 )
 object BangumiKeyDownHandlerPatch : BytecodePatch(setOf(BangumiKeyDownHandlerFingerprint)) {
     override fun execute(context: BytecodeContext) {

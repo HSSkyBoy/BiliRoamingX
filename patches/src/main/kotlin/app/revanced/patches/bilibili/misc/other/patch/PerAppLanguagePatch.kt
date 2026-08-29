@@ -11,9 +11,7 @@ import app.revanced.util.set
     name = "Per app language",
     description = "适配 Android 13 按应用设定语言特性，允许单独设置本 APP 的语言偏好",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object PerAppLanguagePatch : ResourcePatch() {

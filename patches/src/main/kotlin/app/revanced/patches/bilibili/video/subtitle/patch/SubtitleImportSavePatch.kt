@@ -22,9 +22,7 @@ import com.android.tools.smali.dexlib2.iface.reference.StringReference
     name = "Subtitle import and save",
     description = "导入及保存字幕相关功能补丁",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ],
     dependencies = [SubtitleImportSaveButtonPatch::class],
 )

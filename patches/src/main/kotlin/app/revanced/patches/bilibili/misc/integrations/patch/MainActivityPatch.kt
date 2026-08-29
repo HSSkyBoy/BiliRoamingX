@@ -13,9 +13,7 @@ import com.android.tools.smali.dexlib2.Opcode
     name = "Main activity patch",
     description = "代理部分MainActivity方法补丁",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object MainActivityPatch : BytecodePatch() {

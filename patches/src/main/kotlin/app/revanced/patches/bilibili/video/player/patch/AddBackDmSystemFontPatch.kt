@@ -14,8 +14,7 @@ import app.revanced.util.set
     name = "Add back danmaku system font",
     description = "加回弹幕默认使用推荐字体设置",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ],
     dependencies = [IntegrationsPatch::class]
 )

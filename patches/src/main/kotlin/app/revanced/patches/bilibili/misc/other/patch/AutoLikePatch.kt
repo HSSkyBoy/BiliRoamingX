@@ -15,8 +15,7 @@ import com.android.tools.smali.dexlib2.Opcode
     name = "Auto like",
     description = "视频自动点赞补丁",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object AutoLikePatch : BytecodePatch(setOf(SectionFingerprint)) {

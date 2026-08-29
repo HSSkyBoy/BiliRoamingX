@@ -12,9 +12,7 @@ import app.revanced.util.copyResources
     name = "App icon",
     description = "恢复APP图标",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ],
     dependencies = [SettingsResourcePatch::class]
 )

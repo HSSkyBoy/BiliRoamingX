@@ -15,9 +15,7 @@ import com.android.tools.smali.dexlib2.Opcode
     name = "Upgrade",
     description = "自定义更新辅助补丁",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object UpgradePatch : BytecodePatch(setOf(AttachChannelInfoFingerprint, MainCommonServiceImplFingerprint)) {

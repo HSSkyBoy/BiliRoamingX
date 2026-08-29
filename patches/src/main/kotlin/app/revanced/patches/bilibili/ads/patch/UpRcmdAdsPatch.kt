@@ -10,9 +10,7 @@ import app.revanced.patcher.patch.annotation.Patch
     name = "Block up recommend ads",
     description = "屏蔽UP主推荐广告",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object UpRcmdAdsPatch : BytecodePatch() {

@@ -25,9 +25,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
     name = "Player gesture detector hook",
     description = "播放器 GestureDetector hook",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ],
     dependencies = [PlayerToastPatch::class]
 )

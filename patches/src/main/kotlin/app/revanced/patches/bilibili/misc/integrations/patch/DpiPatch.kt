@@ -23,9 +23,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
     name = "Dpi",
     description = "自定义dpi辅助补丁",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object DpiPatch : BytecodePatch(setOf(AppCompatActivityFingerprint)) {

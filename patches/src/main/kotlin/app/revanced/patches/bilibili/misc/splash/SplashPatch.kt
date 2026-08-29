@@ -14,9 +14,7 @@ import app.revanced.util.set
     name = "Splash",
     description = "闪屏页背景色跟随深色模式",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object SplashPatch : ResourcePatch() {

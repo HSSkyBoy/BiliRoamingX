@@ -20,9 +20,7 @@ import app.revanced.patches.bilibili.misc.integrations.patch.ConfigPatch as Inte
     description = "Config hook",
     dependencies = [IntegrationConfigPatch::class],
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object ConfigPatch : BytecodePatch(

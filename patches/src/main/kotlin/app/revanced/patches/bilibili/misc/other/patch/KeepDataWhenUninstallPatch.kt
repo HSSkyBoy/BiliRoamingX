@@ -11,9 +11,7 @@ import app.revanced.util.set
     name = "Keep data when uninstall",
     description = "APP卸载时保留数据",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object KeepDataWhenUninstallPatch : ResourcePatch() {

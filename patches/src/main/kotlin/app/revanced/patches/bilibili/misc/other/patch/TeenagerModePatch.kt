@@ -12,9 +12,7 @@ import app.revanced.util.exception
     name = "Teenager mode",
     description = "禁用青少年模式弹窗",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object TeenagerModePatch : BytecodePatch(setOf(TeenagersModeFingerprint)) {

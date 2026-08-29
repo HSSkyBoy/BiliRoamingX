@@ -14,9 +14,7 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
     name = "Unlock ProtoBuf",
     description = "公开ProtoBuf实体构建方法",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object UnlockProtobufPatch : BytecodePatch() {

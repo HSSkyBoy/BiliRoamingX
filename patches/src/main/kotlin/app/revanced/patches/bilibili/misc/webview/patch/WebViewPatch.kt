@@ -15,9 +15,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.Instruction
     name = "Webview",
     description = "WebView 补丁",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object WebViewPatch : BaseTransformInstructionsPatch<Instruction35cInfo>() {

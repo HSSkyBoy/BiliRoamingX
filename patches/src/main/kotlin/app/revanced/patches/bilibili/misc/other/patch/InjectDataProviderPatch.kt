@@ -12,9 +12,7 @@ import app.revanced.util.set
     name = "Inject DocumentsProvider",
     description = "注入可访问私有目录的 DocumentsProvider",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object InjectDataProviderPatch : ResourcePatch() {

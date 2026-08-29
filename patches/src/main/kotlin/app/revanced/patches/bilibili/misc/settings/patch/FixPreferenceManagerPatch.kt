@@ -18,9 +18,7 @@ import app.revanced.util.exception
     name = "Fix preference manager",
     description = "修复PreferenceManager被混淆后引起的问题",
     compatiblePackages = [
-        CompatiblePackage(name = "tv.danmaku.bili"),
-        CompatiblePackage(name = "tv.danmaku.bilibilihd"),
-        CompatiblePackage(name = "com.bilibili.app.in")
+        CompatiblePackage(name = "tv.danmaku.bili")
     ]
 )
 object FixPreferenceManagerPatch : BytecodePatch(setOf(PreferenceManagerFingerprint)) {
