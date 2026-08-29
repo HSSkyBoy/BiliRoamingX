@@ -31,9 +31,7 @@ object CopyEnhancePatch : MultiMethodBytecodePatch(
 ) {
     override fun execute(context: BytecodeContext) {
         super.execute(context)
-        DescCopyFingerprint.result.ifEmpty {
-            throw DescCopyFingerprint.exception
-        }.forEach {
+        DescCopyFingerprint.result.forEach {
             it.mutableMethod.addInstructionsWithLabels(
                 0, """
                 invoke-static {p1, p2}, Lapp/revanced/bilibili/patches/CopyEnhancePatch;->onCopyDesc(ZLjava/lang/String;)Z
@@ -72,10 +70,7 @@ object CopyEnhancePatch : MultiMethodBytecodePatch(
             CommentCopyOldFingerprint.result to "message",
             CommentCopyNewFingerprint.result to "comment_message",
             Comment3CopyFingerprint.result to "comment_message"
-        ).apply {
-            if (count { it.first != null } == 0)
-                throw PatchException("CopyLongClickListener not found")
-        }.forEach { (result, idName) ->
+        ).forEach { (result, idName) ->
             result?.mutableClass?.interfaces?.add(onLongClickOriginListenerType)
             result?.mutableClass?.methods?.run {
                 result.mutableMethod.also { m ->

@@ -87,15 +87,14 @@ object ConfigPatch : BytecodePatch(
             c.proxy(context).run {
                 fun Method.args() = (0..parameterTypes.size).joinToString { "p$it" }
 
-                val getStringMethod = methods.first { m ->
-                    m.returnType == "Ljava/lang/String;" && m.parameterTypes.let {
-                        it[0] == "Ljava/lang/String;" && it[1] == "Ljava/lang/String;"
-                    }
+                val getStringMethod = methods.firstOrNull { m ->
+                    m.returnType == "Ljava/lang/String;" && m.parameterTypes.size >= 2 &&
+                            m.parameterTypes[0] == "Ljava/lang/String;" && m.parameterTypes[1] == "Ljava/lang/String;"
                 }
-                getStringMethod.cloneMutable(
+                getStringMethod?.cloneMutable(
                     registerCount = getStringMethod.parameterTypes.size + 2,
                     clearImplementation = true
-                ).apply {
+                )?.apply {
                     getStringMethod.name += "_Origin"
                     addInstructions(
                         0, """
@@ -106,17 +105,16 @@ object ConfigPatch : BytecodePatch(
                         return-object v0
                     """.trimIndent()
                     )
-                }.also { methods.add(it) }
+                }?.also { methods.add(it) }
 
-                val getBooleanMethod = methods.first { m ->
-                    m.returnType == "Z" && m.parameterTypes.let {
-                        it[0] == "Ljava/lang/String;" && it[1] == "Z"
-                    }
+                val getBooleanMethod = methods.firstOrNull { m ->
+                    m.returnType == "Z" && m.parameterTypes.size >= 2 &&
+                            m.parameterTypes[0] == "Ljava/lang/String;" && m.parameterTypes[1] == "Z"
                 }
-                getBooleanMethod.cloneMutable(
+                getBooleanMethod?.cloneMutable(
                     registerCount = getBooleanMethod.parameterTypes.size + 3,
                     clearImplementation = true
-                ).apply {
+                )?.apply {
                     getBooleanMethod.name += "_Origin"
                     addInstructions(
                         0, """
@@ -133,7 +131,7 @@ object ConfigPatch : BytecodePatch(
                         return v0
                     """.trimIndent()
                     )
-                }.also { methods.add(it) }
+                }?.also { methods.add(it) }
             }
         }
     }
