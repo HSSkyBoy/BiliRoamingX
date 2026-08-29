@@ -29,26 +29,27 @@ object ForceCommentNavigablePatch : BytecodePatch(fingerprints = setOf(CommentCo
             "com.bilibili.app.comm.comment2.comments.view.PrimaryCommentMainFragment".classDescriptor
         val patchType = "app.revanced.bilibili.patches.ForceCommentNavigablePatch".classDescriptor
         val baseFragmentType = "com.bilibili.lib.ui.BaseFragment".classDescriptor
-        context.findClass(primaryCommentMainFragmentType)?.mutableClass?.methods?.first {
+        context.findClass(primaryCommentMainFragmentType)?.mutableClass?.methods?.firstOrNull {
             it.name == "onCreate" && it.parameterTypes == listOf("Landroid/os/Bundle;")
         }?.addInstructions(
             0, """
             invoke-static {p0}, $patchType->onPrimaryCommentMainFragmentCreate($baseFragmentType)V
         """.trimIndent()
-        ) ?: throw PatchException("not found PrimaryCommentMainFragment")
+        )
         CommentConfigFingerprint.result?.run {
-            val index = scanResult.stringsScanResult!!.matches.last().index
-            val seekEnabledField = mutableMethod.getInstructions().withIndex().firstNotNullOf { (i, inst) ->
+            val lastMatch = scanResult.stringsScanResult?.matches?.lastOrNull() ?: return@run
+            val index = lastMatch.index
+            val seekEnabledField = mutableMethod.getInstructions().withIndex().firstNotNullOfOrNull { (i, inst) ->
                 if (i > index && inst.opcode == Opcode.IGET_BOOLEAN) {
                     inst.getReference<FieldReference>()
                 } else null
-            }
-            mutableClass.methods.first { m ->
+            } ?: return@run
+            mutableClass.methods.firstOrNull { m ->
                 m.parameterTypes.isEmpty() && m.returnType == "Z" && !m.accessFlags.isAbstract()
                         && m.getInstruction(0).let {
                     if (it.opcode == Opcode.IGET_BOOLEAN) it.getReference<FieldReference>() else null
                 } == seekEnabledField
-            }.addInstructionsWithLabels(
+            }?.addInstructionsWithLabels(
                 0, """
                 invoke-static {}, $patchType->enabled()Z
                 move-result v0
