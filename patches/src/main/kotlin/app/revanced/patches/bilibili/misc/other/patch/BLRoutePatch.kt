@@ -28,24 +28,24 @@ object BLRoutePatch : BytecodePatch(setOf(BLRouteBuilderFingerprint, RouteReques
             invoke-static {p1}, Lapp/revanced/bilibili/patches/BLRoutePatch;->intercept(Landroid/net/Uri;)Landroid/net/Uri;
             move-result-object p1
         """.trimIndent()
-        ) ?: throw BLRouteBuilderFingerprint.exception
-        val result = RouteRequestFingerprint.result
-        result?.mutableClass?.methods?.find { m ->
+        )
+        val result = RouteRequestFingerprint.result ?: return
+        result.mutableClass.methods.find { m ->
             m.name == "<init>" && m.parameterTypes.let { it.size == 2 && it[0] == "Landroid/net/Uri;" }
         }?.addInstructions(
             0, """
             invoke-static {p1}, Lapp/revanced/bilibili/patches/BLRoutePatch;->intercept(Landroid/net/Uri;)Landroid/net/Uri;
             move-result-object p1
         """.trimIndent()
-        ) ?: throw RouteRequestFingerprint.exception
-        val routeToMethod = context.classes.asSequence().flatMap { it.methods }.first { m ->
+        )
+        val routeToMethod = context.classes.asSequence().flatMap { it.methods }.firstOrNull { m ->
             m.accessFlags.let { it.isStatic() && it.isPublic() }
                     && m.parameterTypes == listOf(
                 result.classDef.type, "Landroid/content/Context;"
             )
-        }
-        val utilsClass = context.findClass("Lapp/revanced/bilibili/utils/Utils;")!!.mutableClass
-        val utilsRouteToMethod = utilsClass.methods.first { it.name == "routeTo" }
+        } ?: return
+        val utilsClass = context.findClass("Lapp/revanced/bilibili/utils/Utils;")?.mutableClass ?: return
+        val utilsRouteToMethod = utilsClass.methods.firstOrNull { it.name == "routeTo" } ?: return
         utilsRouteToMethod.also { utilsClass.methods.remove(it) }
             .cloneMutable(registerCount = 3, clearImplementation = true).apply {
                 addInstructions(
