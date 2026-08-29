@@ -1,5 +1,6 @@
 #include <jni.h>
 #include <cstdlib>
+#include <cstring>
 #include <android/log.h>
 #include <pthread.h>
 #include "dobby.h"
@@ -19,6 +20,25 @@ void fake_exit(int status) {
     LOGI("Exit function fake success, status: %d", status);
     DobbyDestroy((void *) exit);
     pthread_exit(nullptr);
+}
+
+extern "C" JNIEXPORT jboolean JNICALL
+Java_app_revanced_bilibili_utils_IntegrityVerifier_nativeVerify(JNIEnv *env, jclass, jobject context) {
+    if (!context) return JNI_FALSE;
+    jclass contextClass = env->GetObjectClass(context);
+    if (!contextClass) return JNI_FALSE;
+    jmethodID getPackageNameMethod = env->GetMethodID(contextClass, "getPackageName", "()Ljava/lang/String;");
+    if (!getPackageNameMethod) return JNI_FALSE;
+    auto packageName = (jstring) env->CallObjectMethod(context, getPackageNameMethod);
+    if (!packageName) return JNI_FALSE;
+    const char *pkgStr = env->GetStringUTFChars(packageName, nullptr);
+    bool validPkg = (pkgStr && strcmp(pkgStr, "tv.danmaku.bili") == 0);
+    env->ReleaseStringUTFChars(packageName, pkgStr);
+    if (!validPkg) {
+        LOGE("Native integrity check failed: invalid package name");
+        return JNI_FALSE;
+    }
+    return JNI_TRUE;
 }
 
 JNIEXPORT JNICALL extern "C"

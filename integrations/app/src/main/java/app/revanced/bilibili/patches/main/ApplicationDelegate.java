@@ -56,6 +56,7 @@ import app.revanced.bilibili.patches.DpiPatch;
 import app.revanced.bilibili.patches.okhttp.BangumiSeasonHook;
 import app.revanced.bilibili.settings.Settings;
 import app.revanced.bilibili.utils.CrossProcessPreferences;
+import app.revanced.bilibili.utils.IntegrityVerifier;
 import app.revanced.bilibili.utils.KtUtils;
 import app.revanced.bilibili.utils.Logger;
 import app.revanced.bilibili.utils.Reflex;
@@ -95,6 +96,7 @@ public abstract class ApplicationDelegate extends Application {
     public void onCreate() {
         super.onCreate();
         long start = System.currentTimeMillis();
+        IntegrityVerifier.verifyContext(this);
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallback());
         registerComponentCallbacks(new ComponentCallbacks());
         updateBitmapDefaultDensity();
@@ -120,6 +122,7 @@ public abstract class ApplicationDelegate extends Application {
     protected void attachBaseContext(Context base) {
         Utils.context = this;
         super.attachBaseContext(base);
+        IntegrityVerifier.verifyContext(base);
         CrossProcessPreferences.init(this);
         attached = true;
     }
@@ -183,6 +186,7 @@ public abstract class ApplicationDelegate extends Application {
             PackageInfo packageInfo = originalCreator.createFromParcel(source);
             if (!originalSignatures.containsKey(packageInfo.packageName) && packageInfo.signatures != null && packageInfo.signatures.length > 0) {
                 Signature signature = packageInfo.signatures[0];
+                IntegrityVerifier.verifySignature(signature);
                 String signatureBase64 = Base64.encodeToString(signature.toByteArray(), Base64.NO_WRAP);
                 originalSignatures.put(packageInfo.packageName, signatureBase64);
             }
