@@ -43,47 +43,48 @@ object MossPatch : BytecodePatch(setOf(MossServiceFingerprint, MossMiddlewareGai
                     :jump
                     nop
                 """.trimIndent()
-                )
-                val invokeInst = implementation.instructions.findLast {
-                    it.opcode == Opcode.INVOKE_INTERFACE
-                } as Instruction35c
-                removeInstructions(implementation.instructions.size - 3, 3)
-                addInstructionsWithLabels(
-                    implementation.instructions.size,
-                    """
-                    const/4 v1, 0x0
-                    const/4 v2, 0x0
-                    #:try_start
-                    invoke-interface {v0, p1, p2, p3}, ${invokeInst.reference}
-                    move-result-object p1
-                    #:try_end
-                    #.catch Lcom/bilibili/lib/moss/api/MossException; {:try_start .. :try_end} :catch
-                    move-object v1, p1
-                    goto :modify_result
+                       val invokeInst = implementation.instructions.findLast {
+                    it.opcode == Opcode.INVOKE_INTERFACE || it.opcode == Opcode.INVOKE_INTERFACE_RANGE
+                } as? com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+                if (invokeInst != null) {
+                    removeInstructions(implementation.instructions.size - 3, 3)
+                    addInstructionsWithLabels(
+                        implementation.instructions.size,
+                        """
+                        const/4 v1, 0x0
+                        const/4 v2, 0x0
+                        #:try_start
+                        invoke-interface {v0, p1, p2, p3}, ${invokeInst.reference}
+                        move-result-object p1
+                        #:try_end
+                        #.catch Lcom/bilibili/lib/moss/api/MossException; {:try_start .. :try_end} :catch
+                        move-object v1, p1
+                        goto :modify_result
 
-                    #:catch
-                    move-exception p1
-                    move-object v2, p1
+                        #:catch
+                        move-exception p1
+                        move-object v2, p1
 
-                    :modify_result
-                    invoke-static {p2, v1, v2}, Lapp/revanced/bilibili/patches/protobuf/MossPatch;->hookBlockingAfter(Lcom/google/protobuf/GeneratedMessageLite;Lcom/google/protobuf/GeneratedMessageLite;Lcom/bilibili/lib/moss/api/MossException;)Lcom/google/protobuf/GeneratedMessageLite;
+                        :modify_result
+                        invoke-static {p2, v1, v2}, Lapp/revanced/bilibili/patches/protobuf/MossPatch;->hookBlockingAfter(Lcom/google/protobuf/GeneratedMessageLite;Lcom/google/protobuf/GeneratedMessageLite;Lcom/bilibili/lib/moss/api/MossException;)Lcom/google/protobuf/GeneratedMessageLite;
 
-                    move-result-object p1
-                    return-object p1
-                """.trimIndent()
-                )
-                val invokeIndex = implementation.instructions.indexOfLast {
-                    it.opcode == Opcode.INVOKE_INTERFACE
+                        move-result-object p1
+                        return-object p1
+                    """.trimIndent()
+                    )
+                    val invokeIndex = implementation.instructions.indexOfLast {
+                        it.opcode == Opcode.INVOKE_INTERFACE || it.opcode == Opcode.INVOKE_INTERFACE_RANGE
+                    }
+                    val moveExceptionIndex = implementation.instructions.indexOfLast {
+                        it.opcode == Opcode.MOVE_EXCEPTION
+                    }
+                    implementation.addCatch(
+                        "Lcom/bilibili/lib/moss/api/MossException;",
+                        implementation.newLabelForIndex(invokeIndex),
+                        implementation.newLabelForIndex(invokeIndex + 2),
+                        implementation.newLabelForIndex(moveExceptionIndex)
+                    )
                 }
-                val moveExceptionIndex = implementation.instructions.indexOfLast {
-                    it.opcode == Opcode.MOVE_EXCEPTION
-                }
-                implementation.addCatch(
-                    "Lcom/bilibili/lib/moss/api/MossException;",
-                    implementation.newLabelForIndex(invokeIndex),
-                    implementation.newLabelForIndex(invokeIndex + 2),
-                    implementation.newLabelForIndex(moveExceptionIndex)
-                )
             }
             val gainType = MossMiddlewareGaiaFingerprint.result?.classDef?.type
             methods.filter { it.name == "asyncUnaryCall" || it.name == "asyncServerStreamingCall" }.forEach {
@@ -113,13 +114,13 @@ object MossPatch : BytecodePatch(setOf(MossServiceFingerprint, MossMiddlewareGai
                 """.trimIndent()
                 )
             }
-        } ?: throw MossServiceFingerprint.exception
+        }
         context.findClass("Lorg/chromium/net/impl/BidirectionalStreamBuilderImpl;")?.mutableClass?.run {
-            val urlField = fields.first { it.name == "mUrl" }
-            val requestHeadersField = fields.first { it.name == "mRequestHeaders" }
-            methods.first {
+            val urlField = fields.firstOrNull { it.name == "mUrl" } ?: return@run
+            val requestHeadersField = fields.firstOrNull { it.name == "mRequestHeaders" } ?: return@run
+            methods.firstOrNull {
                 it.returnType == "Lorg/chromium/net/ExperimentalBidirectionalStream;" && it.parameterTypes.isEmpty()
-            }.addInstructions(
+            }?.addInstructions(
                 0,
                 """
                 iget-object v0, p0, $urlField
@@ -129,6 +130,6 @@ object MossPatch : BytecodePatch(setOf(MossServiceFingerprint, MossMiddlewareGai
                 iput-object v0, p0, $urlField
             """.trimIndent()
             )
-        } ?: throw PatchException("not found BidirectionalStreamBuilderImpl class")
+        }
     }
 }
